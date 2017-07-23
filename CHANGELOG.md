@@ -1,5 +1,44 @@
 <p align="center"><h2>[Unreleased] (Only in <code class=" language-php">development</code> branch)</h2></p>
  
+ * [Feature] Теперь в админке есть менеджер BreadCrumbs
+    * Вы можете добавлять breadcrumbs прямо из секции (initialize, onDisplay, onEdit )
+    * Вы можете указывать родительские breadcrumbs 
+    * Вы можете указывать breadcrumbs c ссылкой и без ссылки
+    ```php
+    $this->addBreadCrumb([
+        "id" => "App\Model\Forms\Form"
+        "title" => "All Form Items"
+        "url" => "https://demo.sleepingowladmin.ru/admin/forms"
+        "parent" => "forms-examples"
+    ])
+    ```
+    or
+    ```php
+    $this->addBreadCrumb([
+        "id" => "some_name"
+        "title" => "All Form Items"
+        "url" => "https://demo.sleepingowladmin.ru/admin/forms"
+        "parent" => "App\Model\Forms\Form"
+    ])
+    ```
+    or
+    ```php
+    $this->addBreadCrumb([
+        "id" => "some_end_name"
+        "title" => "All Form Items"
+        "url" => "https://demo.sleepingowladmin.ru/admin/forms"
+        "parent" => "some_name"
+    ])
+    ```
+ * [Bug-Fix] Пофикшено поведение breadcrumbs - теперь добавляет промежуточные
+ * [Feature] Добавлен метод к selectajax и multiselectajax `setSearch` - он позволяет задать поле поиска.
+             Пофикшено поведение этих элементов после сохранения в связи с последними обновлениями select и multiselect
+ * [Feature] Пофикшено поведение ide-helper generator - после его выполнения нужно запускать команду php artisan sleepingowl:ide:generate
+ * [Feature] Изменились селекты. Теперь по умолчанию стоит [vue-multiselect](http://monterail.github.io/vue-multiselect) 
+             Очень не завидую тем у кого появлялись кастомные темплейты на элементы AdminFormElement::select и AdminFormElement::multiselect
+             их придется слегка подпилить. 
+             Оставляйте фидбеки.
+ * [Feature] Появилась возможность редактировать JSON поля. Установка атрибутов идет в AtributeName через `field->key`
  * [Feature] Появилась пара новых эвентов
      * datatables::actions::submitting - эвент до действия после согласия SweetAlert в масс экшнс
      * datatables::actions::submitted  - эвент после действия после согласия SweetAlert масс экшнс

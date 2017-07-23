@@ -3,6 +3,7 @@
 namespace SleepingOwl\Admin\Form\Element;
 
 use LogicException;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 use SleepingOwl\Admin\Form\FormElement;
 use Illuminate\Contracts\Support\Htmlable;
@@ -367,6 +368,26 @@ abstract class NamedFormElement extends FormElement
 
         if (is_null($model) or ! $model->exists) {
             return $value;
+        }
+
+        /*
+         * Implement json parsing
+         */
+        if (strpos($path, '->') !== false) {
+            $casts = collect($model->getCasts());
+            $jsonParts = collect(explode('->', $path));
+
+            $jsonAttr = $model->{$jsonParts->first()};
+
+            $cast = $casts->get($jsonParts->first(), false);
+
+            if ($cast == 'object') {
+                $jsonAttr = json_decode(json_encode($jsonAttr), true);
+            } elseif ($cast != 'array') {
+                $jsonAttr = json_decode($jsonAttr);
+            }
+
+            return Arr::get($jsonAttr, $jsonParts->slice(1)->implode('.'));
         }
 
         $relations = explode('.', $path);
